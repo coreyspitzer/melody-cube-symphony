@@ -19,7 +19,7 @@ const COLORS = {
 // Create a 3x3 grid of smaller cubes to form a Rubik's cube
 const createCubeFace = (color: string, position: [number, number, number], rotation: [number, number, number]) => {
   const face = [];
-  
+
   for (let i = -1; i <= 1; i++) {
     for (let j = -1; j <= 1; j++) {
       face.push({
@@ -31,7 +31,7 @@ const createCubeFace = (color: string, position: [number, number, number], rotat
       });
     }
   }
-  
+
   return face;
 };
 
@@ -39,15 +39,15 @@ const MusicalCube = () => {
   const groupRef = useRef<Group>(null);
   const [lastClickedFace, setLastClickedFace] = useState<string | null>(null);
   const { addNote, canPlayNote } = useMusicRules();
-  
+
   // Create rotation effect
   useFrame(() => {
     if (groupRef.current && !lastClickedFace) {
-      groupRef.current.rotation.y += 0.002;
-      groupRef.current.rotation.x += 0.001;
+      groupRef.current.rotation.y = 0.8;
+      groupRef.current.rotation.x = 0.6;
     }
   });
-  
+
   // Define cube faces
   const faces = [
     // Front face (Z+)
@@ -63,19 +63,19 @@ const MusicalCube = () => {
     // Right face (X+)
     createCubeFace(COLORS.right, [1.5, 0, 0], [0, Math.PI / 2, 0]),
   ];
-  
+
   // Flatten all faces
   const allSquares = faces.flat();
-  
+
   const handleClick = (square: any) => {
     // Check if this note can be played based on rules
     if (canPlayNote(square.note)) {
       // Play the note
       playNote(square.note);
-      
+
       // Add to sequence
       addNote(square.note);
-      
+
       // Show visual feedback
       setLastClickedFace(square.position.join(','));
       setTimeout(() => setLastClickedFace(null), 300);
@@ -85,19 +85,19 @@ const MusicalCube = () => {
       setTimeout(() => setLastClickedFace(null), 100);
     }
   };
-  
+
   return (
     <group ref={groupRef}>
       {allSquares.map((square, index) => {
         const isActive = lastClickedFace === square.position.join(',');
-        
+
         return (
-          <group 
-            key={index} 
+          <group
+            key={index}
             position={square.worldPosition}
             rotation={new THREE.Euler(...square.rotation)}
           >
-            <mesh 
+            <mesh
               position={square.position}
               onClick={(e) => {
                 e.stopPropagation();
@@ -106,8 +106,8 @@ const MusicalCube = () => {
               scale={isActive ? 1.1 : 1}
             >
               <boxGeometry args={[0.9, 0.9, 0.1]} />
-              <meshStandardMaterial 
-                color={isActive ? '#FFFFFF' : square.color} 
+              <meshStandardMaterial
+                color={isActive ? '#FFFFFF' : square.color}
                 emissive={isActive ? square.color : '#000000'}
                 emissiveIntensity={isActive ? 0.5 : 0}
               />

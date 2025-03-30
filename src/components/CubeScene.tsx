@@ -12,7 +12,7 @@ const CubeScene = () => {
       <Suspense fallback={null}>
         <MusicalCube />
       </Suspense>
-      <OrbitControls 
+      <OrbitControls
         enablePan={false}
         minDistance={6}
         maxDistance={12}
